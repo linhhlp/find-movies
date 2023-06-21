@@ -12,3 +12,5 @@ The converting service is provided by CO.HERE.
 When a user inputs a query, the string is converted into a vector and used to find the closest search in the database.
 
 More details will be updated soon once everything is settled.
+
+Demo here: https://find-movies.com/
