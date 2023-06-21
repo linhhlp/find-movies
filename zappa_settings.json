@@ -1,0 +1,11 @@
+{
+    "production": {
+        "app_function": "web_endpoint.app",
+        "profile_name": "default",
+        "project_name": "src",
+        "runtime": "python3.9",
+        "s3_bucket": "find-movies-zappa",
+        "certificate_arn": "arn:aws:acm:us-east-1:915204301920:certificate/4ef28c25-5351-4c3d-aee4-7e48ef681243",
+        "domain": "find-movies.com"
+    }
+}

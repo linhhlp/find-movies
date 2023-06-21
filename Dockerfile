@@ -10,7 +10,7 @@ RUN apt-get update \
   && ln -s /usr/bin/python3 python \  
   && pip3 install flask==2.0 gunicorn cassandra-driver db_dtypes cohere
 
-COPY web_endpoint.py app.py secure-connect-movies-vector-search.zip ./ 
+COPY web_endpoint.py app.py cred.py secure-connect-movies-vector-search.zip.encrypt ./ 
 ADD templates templates
 
 ENTRYPOINT ["gunicorn","web_endpoint:app", "-b", "0.0.0.0:80"]

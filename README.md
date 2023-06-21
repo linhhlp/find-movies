@@ -1,4 +1,4 @@
-Find Movies with AI
+# Find Movies with AI
 =================================================
 
 This is a semantic search service for movies based on a query. For example, "great fictional beautiful animals." should return a list of movies such as "Madagascar 3: Europe's Most Wanted", "Zoology" and so on.
@@ -11,6 +11,35 @@ The converting service is provided by CO.HERE.
 
 When a user inputs a query, the string is converted into a vector and used to find the closest search in the database.
 
-More details will be updated soon once everything is settled.
+## Detail of Work
 
-Demo here: https://find-movies.com/
+The details of the conversion and lookup functions are provided here https://github.com/linhhlp/Machine-Learning-Applications/tree/main/Text-2-Vect-Vector-Search
+
+## Database
+
+The database used in this application is uploaded to Kaggle: https://www.kaggle.com/datasets/linhhlp/35k-movies-with-embedded-plots-to-vectors
+
+## Credentials
+
+To provide credentials to the services of CO.HERE AI and Cassandra by DataStax, the credentials must be stored in the `cred.py` file.
+There is a template file called `cred-template.py` that contains the examples of credentials. Rename this template file to `cred.py` after that.
+
+## Containerization
+
+With the provided Dockerfile, the container can be built with Docker.
+
+```bash
+$ docker image build -t "find_movies" .
+
+$ docker run -d -p 80:80 find_movies
+```
+
+## Demo 
+
+The service is running on: https://find-movies.com/
+
+The service was deployed on AWS Lambda using [zappa](https://github.com/zappa/Zappa). The process of deployment is very simple and straightforward with `zappa`. However, there are some issues with Zappa including do not upload zip files. 
+
+## Deploy to a Domain with AWS Lambda
+
+Follow this guide for more information: https://github.com/zappa/Zappa#deploying-to-a-domain-with-aws-certificate-manager

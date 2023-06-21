@@ -43,7 +43,7 @@ def find_movies():
         vec = convert_text_2_vect(co, [content], "embed-english-light-v2.0")[0]
         for row in cass.execute(
             f"""SELECT year, title, director, cast, genre, wiki_link, plot_summary FROM 
-{KEYSPACE_NAME}.{TABLE_NAME} ORDER BY {method} ANN OF %s LIMIT 10
+            {KEYSPACE_NAME}.{TABLE_NAME} ORDER BY {method} ANN OF %s LIMIT 10
 """,
             [vec],
         ):
