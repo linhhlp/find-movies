@@ -1,26 +1,40 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>{% block title %} What are you looking for? {% endblock %}</h2>
+<h2>{% block title %} What are you looking for?{% endblock %}</h2>
+<p>
+    This is a demo service that suggests movies based on the semantic search. <br />
+    It uses AI to understand the input query and determines what movies are close to the search content. <br />
+    Each movie has a full of summary (plot) and a short summary (brief introduction).<br />
+    Current database was up to 2017. Updates will be available soon.<br />
+</p>
+<br />
+
 <form method="post">
-    <textarea name="content" placeholder="Query content" rows="15" cols="60">{{ request.form['content'] }}</textarea>
+    <textarea name="content" placeholder="What is your idea?" rows="3"
+        cols="60">{{ request.form['content'] }}</textarea>
     <br>
     <select name="method">
         <option value="plot_vector_1024">Search on full summary</option>
         <option value="plot_summary_vector_1024">Search on brief summary</option>
     </select>
     <br><br>
-    <button type="submit">Submit</button>
+    <button type="submit" class='glowing-btn'><span class='glowing-txt'>Suggest<span class='faulty-letter'>
+                me!</span></span> </button>
 </form>
 
 {% if data %}
+<br />
 <h2>Suggested Movies</h2>
-{% for message in data %}
-<div class='message'>
-    <h3>{{ message.title }}</h3>
-    <p>in {{ message.year }} by {{ message.director }} ({{ message.wiki_link }})</p>
-    <p>{{ message.plot_summary }}</p>
-</div>
-{% endfor %}
+<ol style="--length: {{ data|length }}" role=" list">
+    {% for i, message in data.items() %}
+    <li style="--i: {{ i }}">
+        <h3>{{ message.title }}</h3>
+        <p>in {{ message.year }} by {{ message.director }} ({{ message.wiki_link }})<br />
+            {{ message.plot_summary }}</p>
+    </li>
+    {% endfor %}
+</ol>
 {% endif %}
+
 {% endblock %}

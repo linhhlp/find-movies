@@ -1,5 +1,4 @@
 # Find Movies with AI
-=================================================
 
 This is a semantic search service for movies based on a query. For example, "great fictional beautiful animals." should return a list of movies such as "Madagascar 3: Europe's Most Wanted", "Zoology" and so on.
 

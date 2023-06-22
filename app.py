@@ -1,116 +1,58 @@
-import logging
+"""This serves as Web Endpoints for Find-movies service."""
 
-from cassandra import OperationTimedOut  # , ConsistencyLevel,
-from cassandra.auth import PlainTextAuthProvider
-from cassandra.cluster import Cluster as CassandraCluster
-from cassandra.cluster import ConnectionShutdown, NoHostAvailable
-from cassandra.cluster import Session as CassandraSession
+import cohere
+import flask
 
-logging.basicConfig()
-log = logging.getLogger(__name__)
-log.setLevel(logging.DEBUG)
+from cred import (ASTRA_CLIENT_ID, ASTRA_CLIENT_SECRET,
+                  SECURE_CONNECT_BUNDLE_PATH, API_key)
+from utls import Cassandra, convert_text_2_vect
 
+# get free Trial API Key at https://cohere.ai/
+co = cohere.Client(API_key)
 
-class Cassandra:
-    """Connector for Cassandra.
+KEYSPACE_NAME = "demo"
+TABLE_NAME = "movies_35K_vectorized"
 
-    This is the simplified connector for the Cassandra in a cluster.
-    db_info = {
-        "secure_bundle_path": SECURE_CONNECT_BUNDLE_PATH,
-        "client_id": ASTRA_CLIENT_ID,
-        "client_secret": ASTRA_CLIENT_SECRET,
-        "keyspace": KEYSPACE_NAME,
-        "table_name": TABLE_NAME,
-    }
-    config = {
-        "protocol_version": 4,
-    }
-    """
+db_info = {
+    "secure_bundle_path": SECURE_CONNECT_BUNDLE_PATH,
+    "client_id": ASTRA_CLIENT_ID,
+    "client_secret": ASTRA_CLIENT_SECRET,
+    "keyspace": KEYSPACE_NAME,
+    "table_name": TABLE_NAME,
+}
 
-    session: CassandraSession
-    cluster: CassandraCluster
+config = {
+    "protocol_version": 4,
+}
 
-    def __init__(self, db_info, config):
-        self.secure_bundle_path = db_info["secure_bundle_path"]
-        self.client_id = db_info["client_id"]
-        self.keyspace = db_info["keyspace"]
-        self.client_secret = db_info["client_secret"]
-        self.table_name = db_info["table_name"]
-        if "protocol_version" in config:
-            self.protocol_version = config["protocol_version"]
+cass = Cassandra(db_info, config)
 
-        self.cloud_config = {
-            "secure_connect_bundle": db_info["secure_bundle_path"],
-            'use_default_tempdir': True,
-        }
-        self.auth_provider = PlainTextAuthProvider(
-            db_info["client_id"], db_info["client_secret"]
-        )
-        self.session = None
-
-    def connect(self):
-        err = None
-        if self.session is not None:
-            log.debug("session is not None, try to shut down first.")
-            self.disconnect()
-
-        try:
-            self.cluster = CassandraCluster(
-                cloud=self.cloud_config,
-                auth_provider=self.auth_provider,
-                protocol_version=self.protocol_version,
-            )
-            self.session = self.cluster.connect()
-            self.set_keyspace(self.keyspace)
-
-        except (OperationTimedOut, NoHostAvailable, ConnectionShutdown) as e:
-            print(e)
-            err = e
-
-        if self.session is None:
-            raise err
-
-    def execute(self, command, arr=None):
-        result = None
-        if self.session is None:
-            self.connect()
-
-        try:
-            result = self.session.execute(command, arr)
-        except ConnectionShutdown:
-            self.connect()
-            result = self.session.execute(command, arr)
-        return result
-
-    def set_keyspace(self, keyspace):
-        return self.execute(f"USE {keyspace};")
-
-    def disconnect(self):
-        try:
-            self.cluster.shutdown()
-        except Exception:
-            log.debug("Can not shut down.")
+# Start web framework
+app = flask.Flask(__name__)
 
 
-def convert_text_2_vect(co, texts, model="embed-english-light-v2.0"):
-    """Convert multiple text strings to vectors."
+@app.route("/", methods=["GET", "POST"])
+def find_movies():
+    """Find movies."""
+    data = {}
+    if flask.request.method == "POST" and flask.request.values.get("content"):
+        content = flask.request.values.get("content")
+        method = flask.request.values.get("method")
+        if not method:
+            method = "plot_summary_vector_1024"
+        vec = convert_text_2_vect(co, [content], "embed-english-light-v2.0")[0]
+        i = 1
+        for row in cass.execute(
+            f"""SELECT year, title, director, cast, genre, wiki_link, plot_summary FROM 
+            {KEYSPACE_NAME}.{TABLE_NAME} ORDER BY {method} ANN OF %s LIMIT 10
+""",
+            [vec],
+        ):
+            data[i] = row
+            i += 1
 
-    Parameters
-    ----------
-    co : cohere.Client
-        co = cohere.Client(API_key)
-    texts : list of strings
-        texts = [text1, text2, text3, text4, text5, text6...]
-    model : str, optional
-        Dimension of output vector, by default "embed-english-light-v2.0"
-        "embed-english-light-v2.0" = 1024 dim
-        "embed-english-v2.0" = 4096 dim
+    return flask.render_template("index.html", data=data)
 
-    Returns
-    -------
-    list of vectors
-        [[0.1, 0.2, 0.3], [0.4, 0.5, 0.6], ... ]
-    """
-    response = co.embed(model=model, texts=texts)
-    # print('Embeddings: {}'.format(response.embeddings))
-    return response.embeddings
+
+#if __name__ == "__main__":
+#    app.run(host="0.0.0.0")

@@ -1,5 +1,6 @@
 cred.py
 secure-connect-movies-vector-search.zip.encrypt
+venv/
 __pycache__/
 .ipynb_checkpoints/
 tmp/
