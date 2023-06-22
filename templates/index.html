@@ -10,8 +10,8 @@
 </p>
 <br />
 
-<form method="post">
-    <textarea name="content" placeholder="What is your idea?" rows="3"
+<form method="post" action="#suggested_result">
+    <textarea name="content" placeholder="What is your idea?" rows="3" class="textcontent"
         cols="60">{{ request.form['content'] }}</textarea>
     <br>
     <select name="method">
@@ -25,12 +25,12 @@
 
 {% if data %}
 <br />
-<h2>Suggested Movies</h2>
+<h2 id="suggested_result">Suggested Movies</h2>
 <ol style="--length: {{ data|length }}" role=" list">
     {% for i, message in data.items() %}
     <li style="--i: {{ i }}">
         <h3>{{ message.title }}</h3>
-        <p>in {{ message.year }} by {{ message.director }} ({{ message.wiki_link }})<br />
+        <p>in {{ message.year }} by {{ message.director }} (<a href="{{ message.wiki_link }}">Wikipedia link</a>)<br />
             {{ message.plot_summary }}</p>
     </li>
     {% endfor %}

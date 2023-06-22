@@ -1,25 +1,27 @@
-.message {
-    padding: 10px;
-    margin: 5px;
-    background-color: #f3f3f3
-}
-
 nav {
-    max-width: 50rem;
+    max-width: 70rem;
     margin: auto;
+    padding-top: 1em;
 }
 
 nav a {
     color: #d64161;
     font-size: 1.5em;
-    margin-left: 50px;
+    margin-left: 2rem;
     text-decoration: none;
 }
 
-.content {
-    max-width: 50rem;
-    margin: auto;
+.to_right {
+    float: right;
+    font-size: 1.5em;
 }
+
+.content {
+    //max-width: 50rem;
+    margin: auto;
+    padding-left: 2rem;
+}
+
 
 @import url("https://fonts.googleapis.com/css?family=Montserrat:400,700");
 
@@ -31,11 +33,12 @@ body {
     --h: 212deg;
     --brandColor: hsl(var(--h), 71%, var(--l));
     font-family: Montserrat, sans-serif;
-    margin: 0;
+    margin: auto !important;
     background-color: whitesmoke;
     background: black;
     color: purple;
     font-size: 1.15em;
+    max-width: 60rem;
 }
 
 p {

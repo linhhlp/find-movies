@@ -1,9 +1,9 @@
-textarea {
+.textcontent {
     height: auto;
     max-width: 600px;
     color: purple;
     font-weight: 400;
-    font-size: 20px;
+    font-size: 2rem;
     font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
     width: 100%;
     background: grey;
@@ -51,11 +51,11 @@ select {
     appearance: none;
     background-color: transparent;
     border: none;
-    padding: 0 1em 0 0;
+    padding: 0.5em 1em 0.5em 0;
     margin: 0;
     //width: 100%;
     font-family: inherit;
-    font-size: inherit;
+    font-size: 2em;
     cursor: inherit;
     line-height: inherit;
     color: purple;
