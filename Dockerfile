@@ -11,6 +11,7 @@ RUN apt-get update \
   && pip3 install flask==2.0 gunicorn cassandra-driver db_dtypes cohere
 
 COPY app.py utls.py cred.py secure-connect-movies-vector-search.zip.encrypt ./ 
+COPY logtool.py ./ 
 ADD templates templates
 ADD static static
 

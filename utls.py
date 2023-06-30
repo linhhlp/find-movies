@@ -114,3 +114,23 @@ def convert_text_2_vect(co, texts, model="embed-english-light-v2.0"):
     response = co.embed(model=model, texts=texts)
     # print('Embeddings: {}'.format(response.embeddings))
     return response.embeddings
+
+
+def shorten(s, n=10000):
+    """Shorten the string by limiting the number of words
+
+    The Generative Model might limit the length of the input data.
+    Hence, we shorten the input data if exceeding the limit.
+
+    Parameters
+    ----------
+    s : string
+        input string
+    n : int, optional
+        max number of words, by default 10000. (Separated by space " ")
+
+    Returns
+    -------
+    string
+    """
+    return ' '.join(s.split()[:n])

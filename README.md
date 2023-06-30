@@ -33,6 +33,10 @@ $ docker image build -t "find_movies" .
 $ docker run -d -p 80:80 find_movies
 ```
 
+## Logging
+
+To investigate the app and the usage of users, I made a simple logging tool to save a basic data into Cassandra. If you do not want it, just remove it from `app.py`
+
 ## Demo 
 
 The service is running on: https://find-movies.com/

@@ -25,7 +25,16 @@
 
 {% if data %}
 <br />
-<h2 id="suggested_result">Suggested Movies</h2>
+<h2 id="suggested_result">Suggested Movie</h2>
+
+<ol style="--length: 1" role=" list">
+    <li style="--i: 0; list-style-type: none !important;">
+        <p>A movie suggested from "{{ content }}":</p>
+        <p>{{ candidate }}</p>
+    </li>
+</ol>
+
+<h2>Details of Movies</h2>
 <ol style="--length: {{ data|length }}" role=" list">
     {% for i, message in data.items() %}
     <li style="--i: {{ i }}">
