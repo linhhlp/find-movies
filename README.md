@@ -39,7 +39,7 @@ To investigate the app and the usage of users, I made a simple logging tool to s
 
 ## Demo 
 
-The service is running on: https://find-movies.com/
+The service is running on: [https://find-movies.com/](https://findmovies.linhhlp.com/)
 
 The service was deployed on AWS Lambda using [zappa](https://github.com/zappa/Zappa). The process of deployment is very simple and straightforward with `zappa`. However, there are some issues with Zappa including do not upload zip files. 
 
